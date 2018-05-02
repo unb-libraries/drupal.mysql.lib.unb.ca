@@ -13,5 +13,5 @@ innodb_buffer_pool_size=2G
 innodb_flush_log_at_trx_commit=0
 innodb_log_buffer_size=4M
 innodb_log_file_size=256M
-innodb_log_checksums = 0
+innodb_log_checksums = 1
 innodb_force_recovery = 1
