@@ -3,7 +3,7 @@ max_allowed_packet=64M
 
 query_cache_type=1
 query_cache_size=512M
-query_cache_limit=4M
+query_cache_limit=128M
 
 tmp_table_size=128M
 max_heap_table_size=128M
