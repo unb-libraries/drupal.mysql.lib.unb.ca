@@ -1,0 +1,49 @@
+language: php
+
+services:
+  - docker
+
+php:
+  - '7.1'
+
+cache:
+  directories:
+        - $HOME/.composer/cache
+
+git:
+  depth: 1
+
+env:
+  global:
+    - SERVICE_NAME=drupal.mysql.lib.unb.ca
+    - AMAZON_ECR_REGION=us-east-1
+    - DEPLOY_BRANCHES=dev,prod
+    - DEPLOYMENT_FINISHED_MARKER=ready for connections
+    - DOCKER_UPSTREAM_IMAGE=mysql:5.7
+    - OLD_IMAGES_TO_KEEP=2
+    - SERVICE_DEPLOY_PORT=3306
+
+before_install:
+  - git clone git://github.com/unb-libraries/CargoDock.git CargoDock
+  - CargoDock/travis/installDockerCompose.sh
+  - CargoDock/aws/installAuthAws.sh
+  - cp docker-compose.yml.travis docker-compose.yml
+
+before_script:
+  - CargoDock/travis/buildInstanceForTesting.sh
+  - CargoDock/travis/waitForDeployNc.sh
+
+script:
+  - CargoDock/travis/checkStartupForErrors.sh
+
+after_success:
+  - CargoDock/travis/buildImagePushToRepo.sh
+  - CargoDock/travis/cleanupOldImages.sh
+  - CargoDock/travis/triggerKubeDeploy.sh
+
+notifications:
+  slack:
+    rooms:
+      secure: Ni1mtqq7y84BjVUbipQG+1kLKLXECVg8K+CCUYo2g2Z1OENqJFFon58glqRAryG0nuYlAxWAsN8lEQQaFpcKOzihmFK+Lg74peaaYcrqBWywtc8uCd/aXxCefOq7348NAZId02TaDzTPK7sf9EzADXtKBF5OtR3DRUE1COykqgLmprEhyJAhX4pe/QqZePKAe18BJs5fhXGNk24OrCRdVmRAGu1Pd5+P9MqbgAHKCl9DWEokfZiTLjxO6uYOlWck+HXdVhtaFvleHKqQL0YTsdtaxadxH2fEJoWi2ICUkbMoEu4vvXGfBnlmc9m1oozTyveLb5Bl0zTk96fndQQqzRXKacnFyA0cjjKA8LAAg0DTzQNNo1VVU/qVx0DT/7JbXGuhwepchXz8QAjH3bLyIDqdKwlvGL6dnf1QYPpA+AP1dCJCKlHhPFf8ZnZglnQ3xR8s+GngCaLF6OIAaq33CdZjNnx6BEiygMsb/rRi3Y0Hr+WCOP6ADXiGYellayyLHXifXE7I+GVwznzAP+YQJSxkoDWBUVFziez44zA/H2aqJt9VXtVi04hX595uXSxZwE+TW+vAK32FOdojpWJQzjL3RfOnUYAdBZVr3vb3Fpwfagf2GOynmculqxH1O61+17TQCAgnDF8HOCwPhlzyuaXgSf8lMNkHnLiSuL/1JIc=
+    on_start: always
+    on_success: always
