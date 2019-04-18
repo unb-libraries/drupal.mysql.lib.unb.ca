@@ -21,7 +21,7 @@ env:
     - DEPLOYMENT_FINISHED_MARKER=ready for connections
     - DOCKER_UPSTREAM_IMAGE=mysql:5.7
     - OLD_IMAGES_TO_KEEP=2
-    - SERVICE_DEPLOY_PORT=3306
+    - SERVICE_DEPLOY_PORT=3307
 
 before_install:
   - git clone git://github.com/unb-libraries/CargoDock.git CargoDock
