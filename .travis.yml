@@ -4,46 +4,25 @@ services:
   - docker
 
 php:
-  - '7.1'
-
-cache:
-  directories:
-        - $HOME/.composer/cache
+  - '7.2'
 
 git:
   depth: 1
 
-env:
-  global:
-    - SERVICE_NAME=drupal.mysql.lib.unb.ca
-    - AMAZON_ECR_REGION=us-east-1
-    - DEPLOY_BRANCHES=dev,prod
-    - DEPLOYMENT_FINISHED_MARKER=ready for connections
-    - DOCKER_UPSTREAM_IMAGE=mysql:5.7
-    - OLD_IMAGES_TO_KEEP=2
-    - SERVICE_DEPLOY_PORT=3307
-
 before_install:
-  - git clone git://github.com/unb-libraries/CargoDock.git CargoDock
-  - CargoDock/travis/installDockerCompose.sh
-  - CargoDock/aws/installAuthAws.sh
-  - cp docker-compose.yml.travis docker-compose.yml
-
-before_script:
-  - CargoDock/travis/buildInstanceForTesting.sh
-  - CargoDock/travis/waitForDeployNc.sh
+  - composer install
+  - vendor/unb-libraries/dockworker/scripts/travis/init.sh
 
 script:
-  - CargoDock/travis/checkStartupForErrors.sh
-
-after_success:
-  - CargoDock/travis/buildImagePushToRepo.sh
-  - CargoDock/travis/cleanupOldImages.sh
-  - CargoDock/travis/triggerKubeDeploy.sh
+  - set -e
+  - vendor/bin/dockworker local:build-test
+  - vendor/unb-libraries/dockworker/scripts/kubectl/init.sh
+  - vendor/bin/dockworker image:deploy $TRAVIS_BRANCH
+  - vendor/bin/dockworker deployment:logs:check $TRAVIS_BRANCH
 
 notifications:
   slack:
     rooms:
-      secure: Ni1mtqq7y84BjVUbipQG+1kLKLXECVg8K+CCUYo2g2Z1OENqJFFon58glqRAryG0nuYlAxWAsN8lEQQaFpcKOzihmFK+Lg74peaaYcrqBWywtc8uCd/aXxCefOq7348NAZId02TaDzTPK7sf9EzADXtKBF5OtR3DRUE1COykqgLmprEhyJAhX4pe/QqZePKAe18BJs5fhXGNk24OrCRdVmRAGu1Pd5+P9MqbgAHKCl9DWEokfZiTLjxO6uYOlWck+HXdVhtaFvleHKqQL0YTsdtaxadxH2fEJoWi2ICUkbMoEu4vvXGfBnlmc9m1oozTyveLb5Bl0zTk96fndQQqzRXKacnFyA0cjjKA8LAAg0DTzQNNo1VVU/qVx0DT/7JbXGuhwepchXz8QAjH3bLyIDqdKwlvGL6dnf1QYPpA+AP1dCJCKlHhPFf8ZnZglnQ3xR8s+GngCaLF6OIAaq33CdZjNnx6BEiygMsb/rRi3Y0Hr+WCOP6ADXiGYellayyLHXifXE7I+GVwznzAP+YQJSxkoDWBUVFziez44zA/H2aqJt9VXtVi04hX595uXSxZwE+TW+vAK32FOdojpWJQzjL3RfOnUYAdBZVr3vb3Fpwfagf2GOynmculqxH1O61+17TQCAgnDF8HOCwPhlzyuaXgSf8lMNkHnLiSuL/1JIc=
+      secure: dyyK292vCE0KzzZtFFm1VNt2ct3Mhltugjed2vmnwsxaTgKcQsWHnALlAr9EOpnogVSdd4/Xl23MMffiuNcA7ZiCcyZTnNYqRly4e0aJfRMHSHpj2flEktjOPHgKqOiKn6jK49GANJ+EJcWwzCWE8hXnVeOQLdvPdRXVSTm7VCT/8IanI4z/0fW2LM437zacuNr7oVZxKIEGlvmtEVphAKdOsL1hXlO9pZdONg/A9EJG0IJT4dnG1oznsS6jx+cdfMxeGlbMr7V0MhnwlZ9FfYPoH7NEfrpCHClEUYEPetREGaVuEG8R2QDNgbtipy3s+QmCdeJQEQigvRhnJmWneMPIEaV7KUMfkt92TYBmTNlAV4dVzuw+jm8OQe3gxCPUQ7uoPR4wF6TWRbyp2IUsNGQy5VhNZwapqWhmrQ/lQNrPcz5IeKPjawaPWwBTZs+9dgUicy0j+GhBkQTksFqTlhfZqu5k1fNg3/5KGOwNauz7SVJ51YQFGSxDsCcpKmVT49dk9rHFXgCzUe0+sjyAkvm8EXguaaT5mNvmENTO5H6TYmrCrWxazkZpxOHdewSyHcEmkFbMVE+iORHrDuOk/jyQJupqvPgU0RzuyZi07be9/Mc+nu9uvcODymQnOK7VCTZremZE68u38oUVDcVwGAHyoZ0nT58e7qvN1F44V6g=
     on_start: always
     on_success: always
