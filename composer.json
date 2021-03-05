@@ -10,7 +10,7 @@
     }
   },
   "require-dev": {
-    "unb-libraries/dockworker-mysql": "~3"
+    "unb-libraries/dockworker-mysql": "~4"
   },
   "scripts": {
     "post-update-cmd": [
