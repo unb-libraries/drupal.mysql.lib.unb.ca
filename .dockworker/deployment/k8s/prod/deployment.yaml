@@ -57,7 +57,7 @@ spec:
       priorityClassName: vip-essential
       imagePullSecrets:
         -
-          name: ecr-registry-pull
+          name: github-container-registry-auth
       restartPolicy: Always
       volumes:
         -
