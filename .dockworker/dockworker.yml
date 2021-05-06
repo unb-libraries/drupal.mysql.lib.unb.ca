@@ -6,6 +6,7 @@ dockworker:
     project_prefix: IN
     upstream_images:
       - mysql:5.7
+    uuid: 3503
   deployment:
     environments:
       - dev
