@@ -3,6 +3,7 @@ MAINTAINER UNB Libraries <libsupport@unb.ca>
 
 ENV TZ America/Moncton
 
+COPY ./build/scripts /scripts
 COPY ./build/conf.d /etc/mysql/conf.d
 
 LABEL ca.unb.lib.generator="mysql" \
