@@ -1,5 +1,5 @@
 FROM mysql:5.7
-MAINTAINER UNB Libraries <libsupport@unb.ca>
+
 
 ENV TZ America/Moncton
 
@@ -17,4 +17,5 @@ LABEL ca.unb.lib.generator="mysql" \
   org.label-schema.vcs-url="https://github.com/unb-libraries/drupal.mysql.lib.unb.ca" \
   org.label-schema.vendor="University of New Brunswick Libraries" \
   org.label-schema.version=$VERSION \
+  org.opencontainers.image.authors="libsupport@unb.ca" \
   org.opencontainers.image.source="https://github.com/unb-libraries/drupal.mysql.lib.unb.ca"  
