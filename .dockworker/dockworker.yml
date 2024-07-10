@@ -1,26 +1,52 @@
 dockworker:
-  version: '5'
+  version: '6'
   application:
-    name: drupal.mysql.lib.unb.ca
-    finish_marker: 'mysqld: ready for connections'
-    project_prefix: IN
-    upstream_images:
-      - mysql:5.7
-    uuid: 3503
-  deployment:
-    environments:
+    name: Mysql Instance for Drupal Applications at UNB Libraries
+    uri: https://drupal.mysql.lib.unb.ca
+    description: >
+      A Mysql instance for use with Drupal applications at UNB Libraries.
+    topics:
+      - mysql
+      - drupal
+    identifiers:
+      id: drupal.mysql.lib.unb.ca
+      slug: drupal-mysql-lib-unb-ca
+      short_slug: drupmysql
+      uuid: 3503
+    framework:
+      name: Mysql
+      version: 7
+      startup_finished_marker: 'mysqld: ready for connections'
+      endpoint:
+        name: http
+        port: 3306
+        readiness_timeout: 15
+    license:
+      license: MIT
+      holder: University of New Brunswick Libraries
+    shell:
+      path: /bin/sh
+  endpoints:
+    env:
       - dev
       - prod
-    workflow:
-      source: dockworker
-      type: deployment-workflow
-  github:
-    repo: drupal.mysql.lib.unb.ca
-    owner: unb-libraries
-  image:
-    push_branches:
-      - dev
-      - prod
-    name: ghcr.io/unb-libraries/drupal.mysql.lib.unb.ca
-    date_tag_image: true
-    repository: ghcr
+    deployments:
+      drupal-mysql-lib-unb-ca:
+        default: true
+        managed: true
+        name: drupal-mysql-lib-unb-ca
+  workflows:
+    vcs:
+      type: github
+      owner: unb-libraries
+      name: drupal.mysql.lib.unb.ca
+    jira:
+      project_keys:
+        - IN
+    image:
+      name: ghcr.io/unb-libraries/drupal.mysql.lib.unb.ca
+      parent: mysql:5.7
+      repository: GitHub
+      push-branches:
+        - dev
+        - prod
