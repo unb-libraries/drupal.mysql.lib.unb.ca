@@ -15,7 +15,7 @@ dockworker:
       uuid: 3503
     framework:
       name: Mysql
-      version: 7
+      version: 10.4
       startup_finished_marker: 'mysqld: ready for connections'
       endpoint:
         name: http
