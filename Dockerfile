@@ -1,7 +1,7 @@
 FROM mysql:5.7
 
 
-ENV TZ America/Moncton
+ENV TZ="America/Moncton"
 
 COPY ./build/scripts /scripts
 COPY ./build/conf.d /etc/mysql/conf.d
