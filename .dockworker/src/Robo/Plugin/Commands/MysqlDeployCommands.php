@@ -23,7 +23,10 @@ class MysqlDeployCommands extends DockworkerDaemonCommands
             [],
             array_values(
                 [
-                    'Warning, not an error.' => 'as time zone. Skipping it.',
+                    'TZ Warning, not an error.' => 'as time zone. Skipping it.',
+                    'Memory Warning, not an error.' => 'memory.pressure not writable',
+                    'Uring Warning, not an error.' => 'sysctl kernel.io_uring_disabled has the value 2',
+                    'Uring Warning2, not an error.' => 'create_uring failed: falling back to libaio',
                 ]
             ),
         ];

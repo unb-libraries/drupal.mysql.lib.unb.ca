@@ -7,6 +7,7 @@ dockworker:
       A Mysql instance for use with Drupal applications at UNB Libraries.
     topics:
       - mysql
+      - mariadb
       - drupal
     identifiers:
       id: drupal.mysql.lib.unb.ca
@@ -14,9 +15,9 @@ dockworker:
       short_slug: drupmysql
       uuid: 3503
     framework:
-      name: Mysql
-      version: 10.4
-      startup_finished_marker: 'mysqld: ready for connections'
+      name: MariaDB
+      version: 12.0
+      startup_finished_marker: 'mariadbd: ready for connections'
       endpoint:
         name: http
         port: 3306
@@ -45,7 +46,7 @@ dockworker:
         - IN
     image:
       name: ghcr.io/unb-libraries/drupal.mysql.lib.unb.ca
-      parent: mysql:5.7
+      parent: mariadb:12.0
       repository: GitHub
       push-branches:
         - dev
